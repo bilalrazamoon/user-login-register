@@ -3,13 +3,22 @@
  */
 var express = require('express'),
     router = express.Router(),
-    api = require('./controllers/api');
+    api = require('../controllers/api');
 
 
 /**
  * API routes.
  */
 
-/*app.get('/api/login', api.getApi);*/
+router.post('/register', api.register);
+
+/**
+ * API for wrong request.
+ */
+
+router.all('*',function(req,res){
+    res.status(400).json({msg:'invalid api'})
+});
+
 
 module.exports = router;

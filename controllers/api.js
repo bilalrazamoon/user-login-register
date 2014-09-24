@@ -12,26 +12,48 @@ function isEmail(email){
     return re.test(email)
 }
 
-exports.register(function(req,res,next){
-    var error={msg:''};
-    if(!req.body.username || !req.body.password)
-        return res.status(400).json({msg:'invalid user'});
-    if(!isEmail(req.body.email))
-        error.msg+='Email is not valid\n';
-    if(req.body.password<4)
-        error.msg+='Password must me greater than';
-    if(error.msg){
-        return res.status(400).json(error)
+function sendMail(opt,cb){
+    var transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: config.gmail.user,
+            pass: config.gmail.pass
+        }
+    });
+    opt.from="Node App <h.marqa@gmail.com>";
+    transporter.sendMail(opt,cb);
+}
+exports.register=function(req,res,next){
+    if(!req.body.email && !req.body.password && !req.body.password<4) return  res.status(400).json({msg:"Email and Password can't be blank"});
+    if(req.body.email){
+        if(!isEmail(req.body.email)) return res.status(400).json({msg:'Email is invalid'});
     }
+    if(!req.body.password) return  res.status(400).json({msg:"Password can't be blank"});
+    if(req.body.password.length<4) return  res.status(400).json({msg:'Password must be at least 4 characters long'});
     var user = new User({
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        verify:{}
     });
-    User.findOne({email: user.email}, function (err,exist) {
+    User.findOne({email:req.body.email}, function(err,exist){
         if(err) return next(err);
-        if(exist){
-            error.msg+="Account with that email address already exists.";
-            return res.json(error)
-        }
+        if(exist) return res.status(400).json({msg:'Email is already exist'+app.host});
+        crypto.randomBytes(16, function(err, buf){
+            if(err) return next(err);
+            var code = buf.toString('hex');
+            user.verify.code=code;
+            user.save(function(err){
+                if(err) return next(err);
+                sendMail({
+                        to:user.email,
+                        subject:"Email confirmation via Node App",
+                        text:"Thank you for registration!\n\nYour verification code is: "+code.toUpperCase()
+                    },
+                    function(err, info){
+                        if(err) return next(err);
+                        res.status(200).json({msg:'An e-mail has been sent to ' + user.email + ' for E-mail verification.'})
+                    })
+            })
+        })
     })
-});
+};

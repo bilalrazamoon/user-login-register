@@ -8,6 +8,11 @@ var userSchema =new mongoose.Schema({
     email: {type: String, unique: true, lowercase: true},
     password: String,
     tokens: Array,
+    verify: {
+        isVerified: {type:Boolean, default:false},
+        code:String,
+        expires: {type:Date, default: Date.now()+3600000 }
+    },
 
     profile: {
         name: { type: String, default: '' },

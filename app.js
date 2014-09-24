@@ -15,16 +15,10 @@ var express = require('express'),
     mongoose= require('mongoose');
 
 /**
- * API keys and Passport configuration.
+ * Configuration.
  */
 
 var config = require('./config');
-
-/**
- * Controllers
- */
-
-var api = require('./controllers/api');
 
 /**
  * Create Express server.
@@ -49,7 +43,6 @@ mongoose.connection.once('open', function(){
  */
 
 app.set('port', config.port);
-
 app.use(logger('dev'));
 app.use(bodyParser());
 app.use(bodyParser.json());
@@ -57,7 +50,12 @@ app.use(bodyParser.urlencoded());
 app.use(methodOverride());
 app.use(cookieParser());
 
+/**
+ * Routes
+ */
 
+var api = require('./routes/api');
+app.use('/api', api);
 
 /**
  * 500 Error Handler.
