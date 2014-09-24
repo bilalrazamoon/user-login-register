@@ -23,6 +23,7 @@
         "body-parser": "~1.0.0",
         "nodemailer": "^1.2.2",
         "crypto": "",
-        "mongoose": "~3.8.16"
+        "mongoose": "~3.8.16",
+        "jsonwebtoken": "~1.1.2"
     }
 }
