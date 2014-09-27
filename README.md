@@ -5,11 +5,10 @@ It's a login and register REST API sample code
 
 ##REST API
 
-    GET /posts - return a list of posts and associated metadata
-    POST /posts - create a new post
-    GET /posts/:id - return an individual post with associated comments
-    PUT /posts/:id - update an post by id and return an individual post
-    DELETE /posts/:id - delete an psot by id and return deleted message
-    PUT /posts/:id/upvote - upvote a post, notice we use the post ID in the URL
-    POST /posts/:id/comments - add a new comment to a post by ID
-    PUT /posts/:id/comments/:id/upvote - upvote a comment
+    POST /register - register a new user
+    POST /login - return a user id and message
+    GET /users - return a list of users
+    GET /users/:id - return an individual user
+    PUT /posts/:id - update an an individual user and return updated data
+    DELETE /posts/:id - delete an individual and return deleted message
+    POST /passwordReset - reset password and return setted password
