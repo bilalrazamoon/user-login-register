@@ -54,7 +54,7 @@ app.use(cookieParser());
  * Routes
  */
 
-var api = require('./routes/api');
+var api = require('./routes/users');
 app.use('/api', api);
 
 /**
